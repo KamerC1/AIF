@@ -20,6 +20,8 @@ class WorldParser:
         for match in matches:
             x, y = map(int, match)
             gold_positions.append((x, y))
+            
+        gold_positions = [(b, a) for a, b in gold_positions]
 
         return gold_positions
     

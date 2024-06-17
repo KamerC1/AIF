@@ -20,12 +20,19 @@ class AgentActions:
             if shortest_path:
                 dPad_movements = self._get_dPad_movement_from_path(shortest_path)
                 # Aggiungi i movimenti e l'azione di raccolta "C" alla lista delle azioni
-                agent_movements += [dPad_movements + ["C"]]
+                agent_movements += dPad_movements + ["C"]
 
-        return agent_movements
+        return self._convert_actions_to_integer(agent_movements)
     
     def _find_shortest_path(self, start: tuple, goal: tuple):
         """
+        Trova il percorso più breve tra start e goal utilizzando l'algoritmo A*.
+        
+        Args:
+            start (tuple): La posizione di partenza.
+            goal (tuple): La posizione di destinazione.
+        
+        Returns:
             list: Il percorso più breve come lista di tuple.
         """
         try:
@@ -40,6 +47,13 @@ class AgentActions:
     def _get_dPad_movement(self, start_position: tuple, end_position: tuple):
         """
         Converte una coppia di posizioni in un movimento del d-pad.
+        
+        Args:
+            start_position (tuple): La posizione di partenza.
+            end_position (tuple): La posizione di destinazione.
+        
+        Returns:
+            str: La direzione del movimento del d-pad.
         """
         
         delta_x = end_position[0] - start_position[0]
@@ -61,6 +75,12 @@ class AgentActions:
     def _get_dPad_movement_from_path(self, path: list):
         """
         Converte un percorso in una serie di movimenti del d-pad.
+        
+        Args:
+            path (list): Il percorso come lista di posizioni.
+        
+        Returns:
+            list: I movimenti del d-pad come lista di stringhe.
         """
         
         movements = []
@@ -70,3 +90,27 @@ class AgentActions:
             movements.append(self._get_dPad_movement(start_position, end_position))
 
         return movements
+    
+    def _convert_actions_to_integer(self, actions_array):
+        """
+        Converte un array di azioni in un array di interi secondo una mappa di traduzione.
+        """
+        
+        translation = {
+            'N': 0,
+            'E': 1,
+            'S': 2,
+            'W': 3,
+            'NE': 4,
+            'SE': 5,
+            'SW': 6,
+            'NW': 7,
+            'C': 49  # Raccoglie oggetto
+        }
+        
+        int_actions = []
+        
+        for action in actions_array:
+            int_actions.append(translation[action] if action in translation else None)
+        
+        return int_actions
