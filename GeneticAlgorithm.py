@@ -36,10 +36,16 @@ class GeneticAlgorithm:
         """
         Calcola la lunghezza del percorso per un individuo.
         """
+        
+        #Distanza dal punto di partenza al primo oggetto
         distance = self.a_star_distance(self.starting_position, self.gold_positions[individual[0]])
         
+        # Distanza tra gli oggetti
         for i in range(len(individual) - 1):
             distance += self.a_star_distance(self.gold_positions[individual[i]], self.gold_positions[individual[i + 1]])
+        
+        # Aggiungi la distanza dall'ultimo oggetto al punto di partenza
+        distance += self.a_star_distance(self.gold_positions[individual[-1]], self.starting_position)
         
         return distance,
 
@@ -93,10 +99,16 @@ class GeneticAlgorithm:
         # Aggiungiamo il percorso dal punto di partenza al primo oggetto
         start_to_first_gold = [self.starting_position, best_route[0]]
         nx.draw_networkx_edges(self.G, pos, edgelist=[start_to_first_gold], edge_color='blue', width=2)
+        
+        # Aggiungiamo il percorso tra l'ultimo oggetto e il punto di partenza
+        last_gold_to_first = [best_route[-1], self.starting_position]
+        nx.draw_networkx_edges(self.G, pos, edgelist=[last_gold_to_first], edge_color='red', width=2)
+        
 
-        # Aggiungiamo le etichette degli oggetti (gold) in rosso
-        for i, gold in enumerate(self.gold_positions, start=1):
-            plt.text(gold[1], gold[0], str(i) + "\n\n", ha='center', va='center', color='red', fontweight='bold')
+        # Add labels for gold positions in red, based on order of visit
+        for idx, gold in enumerate(best_route, start=1):
+            if gold in self.gold_positions:
+                plt.text(gold[1], gold[0], str(idx) + "\n\n", ha='center', va='center', color='red', fontweight='bold')
 
         path_edges = list(zip(best_route[:-1], best_route[1:]))
         nx.draw_networkx_edges(self.G, pos, edgelist=path_edges, edge_color='green', width=2)
