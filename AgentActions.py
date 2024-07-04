@@ -19,8 +19,10 @@ class AgentActions:
             shortest_path = self._find_shortest_path(start_rout, end_rout)
             if shortest_path:
                 dPad_movements = self._get_dPad_movement_from_path(shortest_path)
-                # Aggiungi i movimenti e l'azione di raccolta "C" alla lista delle azioni
+                # Aggiungi l'azione di raccolta "C" alla lista delle azioni
                 agent_movements += dPad_movements + ["C"]
+        
+        agent_movements.pop()
 
         return self._convert_actions_to_integer(agent_movements)
     

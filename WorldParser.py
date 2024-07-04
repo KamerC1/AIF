@@ -38,7 +38,6 @@ class WorldParser:
         # Aggiungi connessioni diagonali
         for node in G.nodes():
             x, y = node
-            # Aggiungi connessioni diagonali (nei quattro angoli)
             if (x+1, y+1) in G.nodes():
                 G.add_edge(node, (x+1, y+1))
             if (x-1, y-1) in G.nodes():
@@ -90,5 +89,5 @@ class WorldParser:
             plt.text(y, x, f"{i}\n\n", ha='center', va='center', color='red', fontweight='bold')
 
         plt.title('Grid Graph with Objects and Obstacles')
-        plt.gca().invert_yaxis()  # Invertiamo l'asse y per avere l'orientazione corretta
+        plt.gca().invert_yaxis()  # Invertiamo l'asse y 
         plt.show()

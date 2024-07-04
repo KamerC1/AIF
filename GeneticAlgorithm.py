@@ -28,7 +28,7 @@ class GeneticAlgorithm:
         """
         try:
             path = nx.astar_path(self.G, start, goal, heuristic=lambda a, b: abs(a[0] - b[0]) + abs(a[1] - b[1]))
-            return len(path) - 1  # La lunghezza del percorso meno 1 per contare i passi
+            return len(path) - 1
         except nx.NetworkXNoPath:
             return float('inf')
 
@@ -50,9 +50,6 @@ class GeneticAlgorithm:
         return distance,
 
     def configure_toolbox(self):
-        """
-        Configura la toolbox per l'algoritmo genetico.
-        """
         
         # Definizione del tipo di problema e fitness
         creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
@@ -83,6 +80,7 @@ class GeneticAlgorithm:
         
         best_individual = tools.selBest(population, 1)[0]
         best_route = [self.gold_positions[i] for i in best_individual]
+        best_route = best_route + [self.starting_position]
         best_distance = self.evaluate(best_individual)[0]
         
         return best_route, best_distance
@@ -99,11 +97,6 @@ class GeneticAlgorithm:
         # Aggiungiamo il percorso dal punto di partenza al primo oggetto
         start_to_first_gold = [self.starting_position, best_route[0]]
         nx.draw_networkx_edges(self.G, pos, edgelist=[start_to_first_gold], edge_color='blue', width=2)
-        
-        # Aggiungiamo il percorso tra l'ultimo oggetto e il punto di partenza
-        last_gold_to_first = [best_route[-1], self.starting_position]
-        nx.draw_networkx_edges(self.G, pos, edgelist=[last_gold_to_first], edge_color='red', width=2)
-        
 
         # Add labels for gold positions in red, based on order of visit
         for idx, gold in enumerate(best_route, start=1):
